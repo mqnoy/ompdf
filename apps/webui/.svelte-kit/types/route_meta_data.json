@@ -1,6 +1,0 @@
-{
-	"/": [],
-	"/api/compress": [
-		"src/routes/api/compress/+server.ts"
-	]
-}
