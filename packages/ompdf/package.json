@@ -1,0 +1,62 @@
+{
+  "name": "ompdf",
+  "version": "0.1.0",
+  "description": "PDF compression library with smallest, mutool, standard, condense, and photon strategies",
+  "private": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "jest --config jest.config.js",
+    "clean": "rm -rf dist coverage",
+    "example:basic": "tsx examples/basic-usage.ts",
+    "example:commonjs": "node examples/commonjs-usage.cjs",
+    "example:smallest": "tsx examples/smallest-strategy.ts",
+    "example:mutool": "tsx examples/mutool-usage.ts",
+    "example:photon": "tsx examples/photon-image-heavy.ts"
+  },
+  "keywords": [
+    "pdf",
+    "compression",
+    "pdf-compression",
+    "mupdf",
+    "pyodide",
+    "typescript"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "@jspawn/ghostscript-wasm": "^0.0.2",
+    "mupdf": "^1.28.0",
+    "pdf-lib": "^1.17.1",
+    "pyodide": "^0.29.4",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.15.33",
+    "@swc/jest": "^0.2.39",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.3.0",
+    "jest": "^30.4.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}
