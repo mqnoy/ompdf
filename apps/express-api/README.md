@@ -1,6 +1,8 @@
 # express-api
 
-Express application that exposes the `ompdf` library over HTTP.
+Express 5 application that exposes the `ompdf` library over HTTP and hosts the Telegram PDF-compression webhook bot.
+
+> The Telegram bot is integrated here; there is no separate `apps/telegram-bot` workspace.
 
 ## Run
 
@@ -10,16 +12,27 @@ From the workspace root:
 corepack pnpm --filter express-api dev
 ```
 
-Default server:
+Default server (`PORT=3000`):
 
-- `http://localhost:3000`
+- API base: `http://localhost:3000`
 - Swagger UI: `http://localhost:3000/api-docs`
+- OpenAPI JSON: `http://localhost:3000/api-docs.json`
 - Health: `http://localhost:3000/health`
+
+Build, type-check, or test this workspace:
+
+```bash
+corepack pnpm --filter express-api build
+corepack pnpm --filter express-api typecheck
+corepack pnpm --filter express-api test
+```
 
 ## Endpoints
 
 ```http
 GET /health
+GET /api-docs
+GET /api-docs.json
 GET /api/v1/compress/info
 POST /api/v1/compress
 POST /api/v1/telegram/webhook
@@ -115,7 +128,7 @@ curl -F "file=@./input.pdf" \
 
 ## Telegram bot webhook
 
-The Express app can receive Telegram webhook updates for a PDF-compression bot.
+The Express app can receive Telegram webhook updates for a PDF-compression bot. Telegram source lives under `src/routes/telegram.routes.ts`, `src/controllers/telegram.controller.ts`, and `src/services/telegram-*.ts`.
 
 Required environment variables:
 
@@ -137,7 +150,16 @@ curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
   }'
 ```
 
-Then send a PDF document to the bot. The webhook acknowledges Telegram quickly and processes the PDF asynchronously in the running Express process.
+Then send a PDF document to the bot. The webhook acknowledges Telegram quickly and processes the PDF asynchronously in the running Express process. Current bot processing uses the `smallest` algorithm with `medium` quality and sends the compressed PDF back to the originating chat.
+
+## Environment variables
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `3000` | HTTP listen port |
+| `TELEGRAM_BOT_TOKEN` | none | Required for Telegram API requests |
+| `TELEGRAM_WEBHOOK_SECRET` | none | Required webhook secret checked against `X-Telegram-Bot-Api-Secret-Token` |
+| `TELEGRAM_MAX_FILE_BYTES` | `20971520` | Telegram PDF document size limit |
 
 ## Response headers
 

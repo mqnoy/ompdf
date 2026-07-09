@@ -75,21 +75,31 @@ function toPublicQuality(quality?: CompressionQuality): PdfCompressionQuality | 
 }
 
 function normalizeOptions(options?: PdfCompressionOptions): Partial<CompressRequestBody> {
-  return {
-    algorithm: toInternalAlgorithm(options?.algorithm),
-    quality: toInternalQuality(options?.quality),
-    removeMetadata: options?.removeMetadata,
-    optimizeImages: options?.optimizeImages,
-    photonDpi: options?.photon?.dpi,
-    photonFormat: toInternalImageFormat(options?.photon?.format),
-    photonQuality: options?.photon?.quality,
-    ghostscriptPreset: options?.ghostscript?.preset,
-    ghostscriptCompatibilityLevel: options?.ghostscript?.compatibilityLevel,
-    ghostscriptColorImageResolution: options?.ghostscript?.colorImageResolution,
-    ghostscriptGrayImageResolution: options?.ghostscript?.grayImageResolution,
-    ghostscriptMonoImageResolution: options?.ghostscript?.monoImageResolution,
-    ghostscriptDownsampleImages: options?.ghostscript?.downsampleImages,
-  };
+  const normalized: Partial<CompressRequestBody> = {};
+
+  const values: Array<[keyof CompressRequestBody, CompressRequestBody[keyof CompressRequestBody] | undefined]> = [
+    ['algorithm', toInternalAlgorithm(options?.algorithm)],
+    ['quality', toInternalQuality(options?.quality)],
+    ['removeMetadata', options?.removeMetadata],
+    ['optimizeImages', options?.optimizeImages],
+    ['photonDpi', options?.photon?.dpi],
+    ['photonFormat', toInternalImageFormat(options?.photon?.format)],
+    ['photonQuality', options?.photon?.quality],
+    ['ghostscriptPreset', options?.ghostscript?.preset],
+    ['ghostscriptCompatibilityLevel', options?.ghostscript?.compatibilityLevel],
+    ['ghostscriptColorImageResolution', options?.ghostscript?.colorImageResolution],
+    ['ghostscriptGrayImageResolution', options?.ghostscript?.grayImageResolution],
+    ['ghostscriptMonoImageResolution', options?.ghostscript?.monoImageResolution],
+    ['ghostscriptDownsampleImages', options?.ghostscript?.downsampleImages],
+  ];
+
+  for (const [key, value] of values) {
+    if (value !== undefined) {
+      Object.assign(normalized, { [key]: value });
+    }
+  }
+
+  return normalized;
 }
 
 function parseReductionPercent(compressionRatio: string): number {

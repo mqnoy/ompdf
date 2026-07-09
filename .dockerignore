@@ -1,0 +1,12 @@
+.git
+.github
+.zcode
+.turbo
+**/.turbo
+**/node_modules
+**/dist
+**/build
+**/coverage
+**/*.tsbuildinfo
+packages/ompdf/*.tgz
+tmp
